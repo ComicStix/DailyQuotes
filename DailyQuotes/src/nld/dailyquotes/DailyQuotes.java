@@ -1,8 +1,6 @@
 package nld.dailyquotes;
 
 import java.io.IOException;
-import java.util.Iterator;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -19,7 +17,6 @@ public class DailyQuotes {
 		System.out.println(title);
 		
 		Elements containingDiv = doc.select("div.boxyPaddingBig");
-
 		for (Element div: containingDiv){
 			String quote = div.select("a").get(0).text();
 			String author = div.select("a").get(1).text();
@@ -28,12 +25,3 @@ public class DailyQuotes {
 		}
 	}
 }
-
-		
-		
-		
-			
-	
-
-
-
