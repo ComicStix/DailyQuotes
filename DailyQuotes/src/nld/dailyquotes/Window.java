@@ -59,11 +59,11 @@ public class Window extends JFrame {
 		contentPane.add(acknowledgement);
 		
 		JLabel quote = new JLabel("");
-		quote.setBounds(6, 54, 438, 16);
+		quote.setBounds(6, 54, 438, 33);
 		contentPane.add(quote);
 		
 		JLabel author = new JLabel("");
-		author.setBounds(6, 82, 214, 16);
+		author.setBounds(6, 99, 214, 16);
 		contentPane.add(author);
 	}
 }
