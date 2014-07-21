@@ -49,7 +49,7 @@ public class DailyQuotes {
 			return new String[]{quote, author};
 		}
 	
-		public static void main (String[] args){
+		/*public static void main (String[] args){
 			DailyQuotes dq = new DailyQuotes();
 			dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_inspirational.html");
 			System.out.println(dq.getTitle());
@@ -64,4 +64,5 @@ public class DailyQuotes {
 			
 			
 			}
+			*/
 }

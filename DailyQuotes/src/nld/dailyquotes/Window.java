@@ -1,20 +1,24 @@
 package nld.dailyquotes;
 
 
-import java.awt.BorderLayout;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.GridLayout;
+
+
+
 import javax.swing.JLabel;
+
 import java.awt.Font;
-import javax.swing.SwingConstants;
-import java.awt.FlowLayout;
-import net.miginfocom.swing.MigLayout;
-import javax.swing.BoxLayout;
+
+
+import org.jsoup.nodes.Element;
+
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class Window extends JFrame {
 
@@ -23,6 +27,8 @@ public class Window extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	DailyQuotes dq = new DailyQuotes();
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -40,6 +46,13 @@ public class Window extends JFrame {
 	 * Create the frame.
 	 */
 	public Window() {
+		DailyQuotes dq = new DailyQuotes();
+		dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_inspirational.html");
+		ArrayList<Element> allElements = dq.elementsArray("div.boxyPaddingBig");
+		String [] quoteAndAuthor = dq.specificElement(allElements, 3);
+		String quote1 = quoteAndAuthor[0];
+		String author1 = quoteAndAuthor[1];
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 182);
 		contentPane = new JPanel();
@@ -58,12 +71,14 @@ public class Window extends JFrame {
 		acknowledgement.setBounds(6, 138, 167, 16);
 		contentPane.add(acknowledgement);
 		
-		JLabel quote = new JLabel("");
-		quote.setBounds(6, 54, 438, 33);
+		JLabel quote = new JLabel("<html>"+quote1+"<html>");
+		quote.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		quote.setBounds(6, 42, 438, 66);
 		contentPane.add(quote);
 		
-		JLabel author = new JLabel("");
-		author.setBounds(6, 99, 214, 16);
+		JLabel author = new JLabel("- " + author1);
+		author.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		author.setBounds(6, 110, 214, 16);
 		contentPane.add(author);
 	}
 }
