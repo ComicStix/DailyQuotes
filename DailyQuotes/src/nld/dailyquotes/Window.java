@@ -1,9 +1,8 @@
 package nld.dailyquotes;
 
-
-
 import java.awt.EventQueue;
 
+import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -14,20 +13,29 @@ import javax.swing.JLabel;
 
 import java.awt.Font;
 
-
 import org.jsoup.nodes.Element;
 
 import java.awt.Color;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 public class Window extends JFrame {
 
 	private JPanel contentPane;
+	private DailyQuotes dq;
+	private ArrayList<Element> allElements;
+	private Element selection;
+	private int currentIndex;
+	private String [] quoteAndAuthor;
 
 	/**
 	 * Launch the application.
 	 */
-	DailyQuotes dq = new DailyQuotes();
+
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -46,10 +54,12 @@ public class Window extends JFrame {
 	 * Create the frame.
 	 */
 	public Window() {
-		DailyQuotes dq = new DailyQuotes();
+		dq = new DailyQuotes();
 		dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_inspirational.html");
-		ArrayList<Element> allElements = dq.elementsArray("div.boxyPaddingBig");
-		String [] quoteAndAuthor = dq.specificElement(allElements, 3);
+		allElements = dq.elementsArray("div.boxyPaddingBig");
+		selection = allElements.get(0);
+		currentIndex = allElements.indexOf(selection);
+		quoteAndAuthor = dq.getQuoteAndAuthor(selection);
 		String quote1 = quoteAndAuthor[0];
 		String author1 = quoteAndAuthor[1];
 		
@@ -71,14 +81,30 @@ public class Window extends JFrame {
 		acknowledgement.setBounds(6, 138, 167, 16);
 		contentPane.add(acknowledgement);
 		
-		JLabel quote = new JLabel("<html>"+quote1+"<html>");
+		final JLabel quote = new JLabel("<html>"+quote1+"<html>");
 		quote.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		quote.setBounds(6, 42, 438, 66);
 		contentPane.add(quote);
 		
-		JLabel author = new JLabel("- " + author1);
+		final JLabel author = new JLabel("- " + author1);
 		author.setFont(new Font("Lucida Grande", Font.BOLD, 13));
 		author.setBounds(6, 110, 214, 16);
 		contentPane.add(author);
+		
+		JButton btnNextQuote = new JButton("Next Quote");
+		btnNextQuote.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currentIndex++;
+				Element newSelection = allElements.get(currentIndex);
+				String [] nextQuoteAndAuthor = dq.getQuoteAndAuthor(newSelection);
+				String nextQuote = nextQuoteAndAuthor[0];
+				String nextAuthor = nextQuoteAndAuthor[1];
+				quote.setText("<html>"+nextQuote+"<html>");
+				author.setText("- " + nextAuthor);
+			}
+		});
+		btnNextQuote.setBounds(327, 125, 117, 29);
+		contentPane.add(btnNextQuote);
+		
 	}
 }

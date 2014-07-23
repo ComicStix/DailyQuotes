@@ -42,27 +42,14 @@ public class DailyQuotes {
 		return elements;
 		}
 		
-		public String [] specificElement(ArrayList<Element> div, int index){
-			Element currentQuote = div.get(index);
-			quote = currentQuote.select("a").get(0).text();
-			author = currentQuote.select("a").get(1).text();
+		public String [] getQuoteAndAuthor(Element specificElement){
+			quote = specificElement.select("a").get(0).text();
+			author = specificElement.select("a").get(1).text();
 			return new String[]{quote, author};
 		}
-	
-		/*public static void main (String[] args){
-			DailyQuotes dq = new DailyQuotes();
-			dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_inspirational.html");
-			System.out.println(dq.getTitle());
-			
-			
-			ArrayList<Element> allElements = dq.elementsArray("div.boxyPaddingBig");
-			String [] quoter = dq.specificElement(allElements, 0);
-			String quote1 = quoter[0];
-			String author1 = quoter[1];
-			System.out.println(quote1);
-			System.out.println(author1);
-			
-			
-			}
-			*/
+		public Element getNextElement (int currentIndex, ArrayList<Element>allElements){
+			int nextIndex = currentIndex + 1;
+			Element nextElement = allElements.get(nextIndex);
+			return nextElement;
+		}
 }
