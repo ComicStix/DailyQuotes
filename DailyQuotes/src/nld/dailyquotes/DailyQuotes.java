@@ -52,4 +52,11 @@ public class DailyQuotes {
 			Element nextElement = allElements.get(nextIndex);
 			return nextElement;
 		}
+		public boolean outOfQuotes (ArrayList<Element> array, int currentIndex)
+		{
+			if(array.size()-1==currentIndex){
+				return true;
+			}
+			return false;
+		}
 }

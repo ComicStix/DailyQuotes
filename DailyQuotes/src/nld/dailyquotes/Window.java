@@ -1,8 +1,6 @@
 package nld.dailyquotes;
 
 import java.awt.EventQueue;
-
-import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -29,8 +27,9 @@ public class Window extends JFrame {
 	private DailyQuotes dq;
 	private ArrayList<Element> allElements;
 	private Element selection;
-	private int currentIndex;
+	private int currentIndex = 0;
 	private String [] quoteAndAuthor;
+	private int pageNumber = 2;
 
 	/**
 	 * Launch the application.
@@ -58,7 +57,6 @@ public class Window extends JFrame {
 		dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_inspirational.html");
 		allElements = dq.elementsArray("div.boxyPaddingBig");
 		selection = allElements.get(0);
-		currentIndex = allElements.indexOf(selection);
 		quoteAndAuthor = dq.getQuoteAndAuthor(selection);
 		String quote1 = quoteAndAuthor[0];
 		String author1 = quoteAndAuthor[1];
@@ -94,6 +92,13 @@ public class Window extends JFrame {
 		JButton btnNextQuote = new JButton("Next Quote");
 		btnNextQuote.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				boolean endOfArray = dq.outOfQuotes(allElements, currentIndex);
+				if (endOfArray==true){
+					dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_inspirational" + pageNumber + ".html");
+					ArrayList <Element> newElements = dq.elementsArray("div.boxyPaddingBig");
+					allElements.addAll(newElements);
+					pageNumber++;
+				}
 				currentIndex++;
 				Element newSelection = allElements.get(currentIndex);
 				String [] nextQuoteAndAuthor = dq.getQuoteAndAuthor(newSelection);
