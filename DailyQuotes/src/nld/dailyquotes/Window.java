@@ -26,10 +26,12 @@ public class Window extends JFrame {
 	private JPanel contentPane;
 	private DailyQuotes dq;
 	private ArrayList<Element> allElements;
+	private ArrayList<Element> newElements;
 	private Element selection;
 	private int currentIndex = 0;
 	private String [] quoteAndAuthor;
 	private int pageNumber = 2;
+	private int index = 1;
 
 	/**
 	 * Launch the application.
@@ -60,6 +62,7 @@ public class Window extends JFrame {
 		quoteAndAuthor = dq.getQuoteAndAuthor(selection);
 		String quote1 = quoteAndAuthor[0];
 		String author1 = quoteAndAuthor[1];
+		System.out.println("---");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 182);
@@ -94,11 +97,24 @@ public class Window extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				boolean endOfArray = dq.outOfQuotes(allElements, currentIndex);
 				if (endOfArray==true){
+					System.out.println("Page Number: " + pageNumber);
 					dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_inspirational" + pageNumber + ".html");
-					ArrayList <Element> newElements = dq.elementsArray("div.boxyPaddingBig");
-					allElements.addAll(newElements);
+					newElements = dq.elementsArray("div.boxyPaddingBig");
+					for (Element j: newElements){
+						String [] test = dq.getQuoteAndAuthor(j);
+						String blah = test[0];
+						String blah2 = test[1];
+						System.out.println(index + ":");
+						System.out.println(blah);
+						System.out.println(blah2);
+						System.out.println();
+					}
+					allElements = newElements;
 					pageNumber++;
+					System.out.println("Page number: " + pageNumber);
+					System.out.println("---");
 				}
+		
 				currentIndex++;
 				Element newSelection = allElements.get(currentIndex);
 				String [] nextQuoteAndAuthor = dq.getQuoteAndAuthor(newSelection);
@@ -110,6 +126,5 @@ public class Window extends JFrame {
 		});
 		btnNextQuote.setBounds(327, 125, 117, 29);
 		contentPane.add(btnNextQuote);
-		
 	}
 }
