@@ -62,7 +62,6 @@ public class Window extends JFrame {
 		quoteAndAuthor = dq.getQuoteAndAuthor(selection);
 		String quote1 = quoteAndAuthor[0];
 		String author1 = quoteAndAuthor[1];
-		System.out.println("---");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 182);
@@ -92,12 +91,11 @@ public class Window extends JFrame {
 		author.setBounds(6, 110, 214, 16);
 		contentPane.add(author);
 		
-		JButton btnNextQuote = new JButton("Next Quote");
+		JButton btnNextQuote = new JButton("Next");
 		btnNextQuote.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				boolean endOfArray = dq.outOfQuotes(allElements, currentIndex);
 				if (endOfArray==true){
-					System.out.println("Page Number: " + pageNumber);
 					dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_inspirational" + pageNumber + ".html");
 					newElements = dq.elementsArray("div.boxyPaddingBig");
 					for (Element j: newElements){
@@ -126,5 +124,27 @@ public class Window extends JFrame {
 		});
 		btnNextQuote.setBounds(327, 125, 117, 29);
 		contentPane.add(btnNextQuote);
+		
+		JButton btnPreviousQuote = new JButton("Previous");
+		btnPreviousQuote.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int previousIndex = currentIndex -1;
+				if (previousIndex < 0 ){
+					previousIndex = 0;
+					currentIndex = previousIndex;
+				}
+				else {
+					Element newSelection = allElements.get(previousIndex);
+					String [] nextQuoteAndAuthor = dq.getQuoteAndAuthor(newSelection);
+					String nextQuote = nextQuoteAndAuthor[0];
+					String nextAuthor = nextQuoteAndAuthor[1];
+					quote.setText("<html>"+nextQuote+"<html>");
+					author.setText("- " + nextAuthor);
+					currentIndex = previousIndex;
+				}
+			}
+		});
+		btnPreviousQuote.setBounds(198, 125, 117, 29);
+		contentPane.add(btnPreviousQuote);
 	}
 }
