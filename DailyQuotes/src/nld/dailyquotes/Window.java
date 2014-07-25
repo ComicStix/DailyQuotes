@@ -135,11 +135,11 @@ public class Window extends JFrame {
 				}
 				else {
 					Element newSelection = allElements.get(previousIndex);
-					String [] nextQuoteAndAuthor = dq.getQuoteAndAuthor(newSelection);
-					String nextQuote = nextQuoteAndAuthor[0];
-					String nextAuthor = nextQuoteAndAuthor[1];
-					quote.setText("<html>"+nextQuote+"<html>");
-					author.setText("- " + nextAuthor);
+					String [] previousQuoteAndAuthor = dq.getQuoteAndAuthor(newSelection);
+					String previousQuote = previousQuoteAndAuthor[0];
+					String previousAuthor = previousQuoteAndAuthor[1];
+					quote.setText("<html>"+previousQuote+"<html>");
+					author.setText("- " + previousAuthor);
 					currentIndex = previousIndex;
 				}
 			}
