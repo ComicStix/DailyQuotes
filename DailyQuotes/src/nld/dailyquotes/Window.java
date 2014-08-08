@@ -29,15 +29,8 @@ public class Window extends JFrame implements ActionListener {
 	public JLabel author;
 	private String[] quoteAndAuthor;
 	private int pageNumber = 2;
-	private int index = 1;
-	private boolean testBosolean = true;
-	private Calendar cal1 = Calendar.getInstance();
-	private Calendar cal2;
-	private Calendar temp;
-	
-
-	// private Timer timer;
-	// private Timer timer;
+	private Calendar previousTime = Calendar.getInstance();
+	private Calendar currentTime;
 
 	/**
 	 * Launch the application.
@@ -46,8 +39,6 @@ public class Window extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				// Time timer = new Time();
-				Window window = new Window();
 				try {
 					Window frame = new Window();
 					frame.setVisible(true);
@@ -108,17 +99,8 @@ public class Window extends JFrame implements ActionListener {
 					dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_inspirational"
 							+ pageNumber + ".html");
 					newElements = dq.elementsArray("div.boxyPaddingBig");
-					/*
-					 * for (Element j : newElements) { String[] test =
-					 * dq.getQuoteAndAuthor(j); String blah = test[0]; String
-					 * blah2 = test[1]; System.out.println(index + ":");
-					 * System.out.println(blah); System.out.println(blah2);
-					 * System.out.println(); }
-					 */
 					allElements = newElements;
 					pageNumber++;
-					System.out.println("Page number: " + pageNumber);
-					System.out.println("---");
 				}
 
 				currentIndex++;
@@ -153,39 +135,39 @@ public class Window extends JFrame implements ActionListener {
 				}
 			}
 		});
+
 		btnPreviousQuote.setBounds(198, 125, 117, 29);
 		contentPane.add(btnPreviousQuote);
-
 		Timer timer = new Timer(5000, this);
 		timer.start();
 	}
 
+	// Goes to next quote when the day has changed
 	public void actionPerformed(ActionEvent e) {
-		cal2 = Calendar.getInstance();
-		boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-		                  cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
-		if (sameDay == false){
-		boolean endOfArray = dq.outOfQuotes(allElements, currentIndex);
-		if (endOfArray == true) {
-			dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_inspirational"
-					+ pageNumber + ".html");
-			newElements = dq.elementsArray("div.boxyPaddingBig");
-			allElements = newElements;
-			pageNumber++;
-			System.out.println("Page number: " + pageNumber);
-			System.out.println("---");
-		}
-		currentIndex++;
-		Element newSelection = allElements.get(currentIndex);
-		String[] nextQuoteAndAuthor = dq
-				.getQuoteAndAuthor(newSelection);
-		String nextQuote = nextQuoteAndAuthor[0];
-		String nextAuthor = nextQuoteAndAuthor[1];
-		quote.setText("<html>" + nextQuote + "<html>");
-		author.setText("- " + nextAuthor);
-		}
-		cal1 = cal2;
+		currentTime = Calendar.getInstance();
+		boolean sameDay = previousTime.get(Calendar.YEAR) == currentTime
+				.get(Calendar.YEAR)
+				&& previousTime.get(Calendar.DAY_OF_YEAR) == currentTime
+						.get(Calendar.DAY_OF_YEAR);
+		if (sameDay == false) {
+			boolean endOfArray = dq.outOfQuotes(allElements, currentIndex);
+			if (endOfArray == true) {
+				dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_inspirational"
+						+ pageNumber + ".html");
+				newElements = dq.elementsArray("div.boxyPaddingBig");
+				allElements = newElements;
+				pageNumber++;
+			}
 
+			currentIndex++;
+			Element newSelection = allElements.get(currentIndex);
+			String[] nextQuoteAndAuthor = dq.getQuoteAndAuthor(newSelection);
+			String nextQuote = nextQuoteAndAuthor[0];
+			String nextAuthor = nextQuoteAndAuthor[1];
+			quote.setText("<html>" + nextQuote + "<html>");
+			author.setText("- " + nextAuthor);
+		}
+		previousTime = currentTime;
 	}
 
 }
