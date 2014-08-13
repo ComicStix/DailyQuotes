@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,6 +32,9 @@ public class Window extends JFrame implements ActionListener {
 	private int pageNumber = 2;
 	private Calendar previousTime = Calendar.getInstance();
 	private Calendar currentTime;
+	private String category;
+	private String quote1;
+	private String author1;
 
 	/**
 	 * Launch the application.
@@ -55,14 +59,6 @@ public class Window extends JFrame implements ActionListener {
 	 */
 	public Window() {
 
-		dq = new DailyQuotes();
-		dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_inspirational.html");
-		allElements = dq.elementsArray("div.boxyPaddingBig");
-		selection = allElements.get(0);
-		quoteAndAuthor = dq.getQuoteAndAuthor(selection);
-		String quote1 = quoteAndAuthor[0];
-		String author1 = quoteAndAuthor[1];
-
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 182);
 		contentPane = new JPanel();
@@ -81,28 +77,17 @@ public class Window extends JFrame implements ActionListener {
 		acknowledgement.setBounds(6, 138, 167, 16);
 		contentPane.add(acknowledgement);
 
-		quote = new JLabel("<html>" + quote1 + "<html>");
-		quote.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
-		quote.setBounds(6, 42, 438, 66);
-		contentPane.add(quote);
-
-		author = new JLabel("- " + author1);
-		author.setFont(new Font("Lucida Grande", Font.BOLD, 13));
-		author.setBounds(6, 110, 214, 16);
-		contentPane.add(author);
-
 		JButton btnNextQuote = new JButton("Next");
 		btnNextQuote.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				boolean endOfArray = dq.outOfQuotes(allElements, currentIndex);
 				if (endOfArray == true) {
-					dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_inspirational"
-							+ pageNumber + ".html");
+					dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_"
+							+ category + pageNumber + ".html");
 					newElements = dq.elementsArray("div.boxyPaddingBig");
 					allElements = newElements;
 					pageNumber++;
 				}
-
 				currentIndex++;
 				Element newSelection = allElements.get(currentIndex);
 				String[] nextQuoteAndAuthor = dq
@@ -138,6 +123,44 @@ public class Window extends JFrame implements ActionListener {
 
 		btnPreviousQuote.setBounds(198, 125, 117, 29);
 		contentPane.add(btnPreviousQuote);
+
+		String[] categories = { "inspirational", "motivational", "funny",
+				"wisdom", "success", "leadership", "friendship", "love",
+				"positive", "life", "happiness", "work", "education" };
+		JComboBox comboBox = new JComboBox(categories);
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				category = (String) comboBox.getSelectedItem();
+				dq = new DailyQuotes();
+				dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_"
+						+ category + ".html");
+				allElements = dq.elementsArray("div.boxyPaddingBig");
+				selection = allElements.get(0);
+				quoteAndAuthor = dq.getQuoteAndAuthor(selection);
+				quote1 = quoteAndAuthor[0];
+				author1 = quoteAndAuthor[1];
+
+				if (quote == null & author == null) {
+					quote = new JLabel("<html>" + quote1 + "<html>");
+					quote.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+					quote.setBounds(6, 42, 438, 66);
+					contentPane.add(quote);
+
+					author = new JLabel("- " + author1);
+					author.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+					author.setBounds(6, 110, 214, 16);
+					currentIndex = 0;
+					contentPane.add(author);
+				} else {
+					quote.setText("<html>" + quote1 + "<html>");
+					author.setText(author1);
+				}
+
+			}
+		});
+		comboBox.setBounds(6, 6, 117, 32);
+		contentPane.add(comboBox);
+
 		Timer timer = new Timer(5000, this);
 		timer.start();
 	}
@@ -152,8 +175,8 @@ public class Window extends JFrame implements ActionListener {
 		if (sameDay == false) {
 			boolean endOfArray = dq.outOfQuotes(allElements, currentIndex);
 			if (endOfArray == true) {
-				dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_inspirational"
-						+ pageNumber + ".html");
+				dq.setDocument("http://www.brainyquote.com/quotes/topics/topic_"
+						+ category + pageNumber + ".html");
 				newElements = dq.elementsArray("div.boxyPaddingBig");
 				allElements = newElements;
 				pageNumber++;
@@ -169,5 +192,4 @@ public class Window extends JFrame implements ActionListener {
 		}
 		previousTime = currentTime;
 	}
-
 }
